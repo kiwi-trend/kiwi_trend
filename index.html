@@ -1,5 +1,6 @@
 
 
+Aerogril landing · HTML
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -134,6 +135,27 @@
   .price-block .amount{font-family:'Space Mono';font-weight:700;font-size:42px;color:var(--blue-dark);}
   .price-block .cur{font-size:18px;color:var(--blue-dark);font-weight:700;}
   .price-block .note{font-size:12.5px;color:var(--muted);width:100%;}
+ 
+  /* ---- scarcity banner ---- */
+  .scarcity{
+    display:flex;align-items:center;gap:10px;
+    background:linear-gradient(90deg,#FFF3EE,#FFF7F2);
+    border:1px solid rgba(228,87,46,0.28);
+    border-radius:var(--radius-sm);
+    padding:11px 13px;margin:0 0 16px;
+  }
+  .scarcity .ic{
+    flex:none;width:30px;height:30px;border-radius:50%;
+    background:var(--ember);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .scarcity .ic svg{width:15px;height:15px;}
+  .scarcity .txt{font-size:12.5px;line-height:1.35;}
+  .scarcity .txt b{
+    display:block;font-family:'Unbounded';font-size:13.5px;font-weight:700;
+    color:var(--ember);margin-bottom:1px;
+  }
+  .scarcity .txt span{color:var(--muted);}
  
   /* ---- form ---- */
   .lead-card{
@@ -326,7 +348,7 @@
     </div>
  
     <div class="price-block">
-      <span class="old-price">4500 грн</span>
+      <span class="old-price">4500 грн</span
       <span class="amount">3890</span><span class="cur">грн</span>
       <span class="note">ціна за замовлення через сайт</span>
     </div>
@@ -518,12 +540,23 @@
  
   // ---- lead sending: replace with your real endpoint ----
   function sendLead(phone, source){
-    // TODO: підключіть реальний обробник ліда, напр.:
-    // fetch('https://your-webhook-url.example/lead', {
-    //   method:'POST',
-    //   headers:{'Content-Type':'application/json'},
-    //   body: JSON.stringify({ phone, source, product:'Аерогриль з 2 тенами', price:3890, ts:Date.now() })
-    // });
+    // ==== TELEGRAM: вкажіть свої дані ====
+    const TG_BOT_TOKEN = '8952970714:AAH4fOX51obdvSppCr4GSAqHA2Ydz1Rqvdw';   // напр. 123456789:AA...
+    const TG_CHAT_ID   = '-5369753795';       // напр. 123456789 або -1001234567890 для групи
+ 
+    const text =
+      '🔥 Нова заявка — Аерогриль з 2 тенами\n' +
+      '📞 Телефон: ' + phone + '\n' +
+      '💰 Ціна: 3890 грн\n' +
+      '📍 Джерело: ' + source + '\n' +
+      '🕒 ' + new Date().toLocaleString('uk-UA');
+ 
+    fetch('https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TG_CHAT_ID, text: text })
+    }).catch(function(err){ console.error('Telegram send failed:', err); });
+ 
     console.log('Lead:', phone, source);
  
     // ad conversion events — розкоментуйте після підключення пікселів у <head>
